@@ -1,7 +1,7 @@
-const User = require('./User');
-const Thought = require('./Thought');
+const Job = require('./Job');
+const Thought = require('./Room');
 
-module.exports = {User, Thought};
+module.exports = {Job, Thought};
 
 
 

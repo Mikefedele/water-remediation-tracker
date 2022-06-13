@@ -1,49 +1,48 @@
-const { User, Thought } = require("../models");
+const { Job, Room } = require("../models");
 
 module.exports = {
-  getUsers(req, res) {
-    User.find()
+  getJobs(req, res) {
+    Job.find()
       .then((users) => res.json(users))
       .catch((err) => res.status(500).json(err));
   },
 
-  getSingleUser(req, res) {
-    User.findOne({ _id: req.params.userId })
+  getSingleJob(req, res) {
+    Job.findOne({ _id: req.params.jobId })
       .select("-__v")
-      .populate("friends")
-      .populate("thoughts")
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: "No user with that ID" })
-          : res.json(user)
+      .populate("rooms")
+      .then((job) =>
+        !job
+          ? res.status(404).json({ message: "No job with that ID" })
+          : res.json(job)
       )
       .catch((err) =>{ console.log(err);
         res.status(500).json(err)});
   },
 
   createUser(req, res) {
-    User.create(req.body)
-      .then((user) => res.json(user))
+    Job.create(req.body)
+      .then((job) => res.json(job))
       .catch((err) => res.status(500).json(err));
   },
 
-  deleteUser(req, res) {
-    User.findOneAndRemove({ _id: req.params.userId })
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: "No user with that ID" })
-          : Thought.deleteMany({ _id: { $in: user.thoughts } })
+  deleteJob(req, res) {
+    User.findOneAndRemove({ _id: req.params.jobId })
+      .then((job) =>
+        !job
+          ? res.status(404).json({ message: "No job with that ID" })
+          : Room.deleteMany({ _id: { $in: job.rooms } })
       )
-      .then(() => res.json({ message: "User and user's thoughts deleted" }))
+      .then(() => res.json({ message: "Job and job's rooms deleted" }))
       .catch((err) => res.status(500).json(err));
   },
 
-  updateUser(req, res) {
-    User.findOneAndUpdate({ _id: req.params.userId }, { $set: req.body })
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: "No user with that ID" })
-          : res.json(user)
+  updateJob(req, res) {
+    Job.findOneAndUpdate({ _id: req.params.jobId }, { $set: req.body })
+      .then((job) =>
+        !job
+          ? res.status(404).json({ message: "No job with that ID" })
+          : res.json(job)
       )
       .catch((err) => res.status(500).json(err));
   },
